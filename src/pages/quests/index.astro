@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+import QuestCard from "../../components/QuestCard.astro";
+import { allQuests } from "../../lib/content";
+const quests = await allQuests();
+const statuses = [
+  "active",
+  "planned",
+  "paused",
+  "complete",
+  "abandoned",
+] as const;
+---
+
+<Base
+  title="Quests"
+  description="Project hubs for ongoing Garage Sidequests experiments, from retired enterprise Wi-Fi to battery testing and local voice control."
+>
+  <section class="page-intro">
+    <p class="eyebrow">THE PROJECTS</p>
+    <h1>Quests</h1>
+    <p>
+      Some work. Some stall. Some turn into something else.
+      <br />
+      This is where each project keeps its notes.
+    </p>
+  </section>
+  <nav class="status-nav" aria-label="Quest status">
+    {statuses
+      .filter((s) => quests.some((q) => q.data.status === s))
+      .map((s) => (
+        <a href={`#${s}`}>
+          {s} <span>{quests.filter((q) => q.data.status === s).length}</span>
+        </a>
+      ))}
+  </nav>
+  {statuses
+    .filter((s) => quests.some((q) => q.data.status === s))
+    .map((s) => (
+      <section class="section" id={s}>
+        <h2 class="status-heading">{s}</h2>
+        <div class="quest-grid">
+          {quests
+            .filter((q) => q.data.status === s)
+            .map((quest, index) => (
+              <QuestCard quest={quest} index={index} />
+            ))}
+        </div>
+      </section>
+    ))}
+</Base>

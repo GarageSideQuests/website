@@ -1,0 +1,22 @@
+---
+import Base from "../../layouts/Base.astro";
+import LogList from "../../components/LogList.astro";
+import { publicLogs } from "../../lib/content";
+const entries = await publicLogs();
+---
+
+<Base
+  title="Quest Log"
+  description="Chronological notes from Garage Sidequests projects: progress, experiments, bugs, measurements, and changes of direction."
+>
+  <section class="page-intro">
+    <p class="eyebrow">THE FIELD NOTES</p>
+    <h1>Quest Log</h1>
+    <p>What happened, what changed, and what’s worth remembering.</p>
+    <a href="/rss.xml">Follow via RSS ↗</a>
+  </section>
+  <section class="section">
+    <h2 class="sr-only">Recent entries</h2>
+    <LogList entries={entries} />
+  </section>
+</Base>

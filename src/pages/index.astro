@@ -1,0 +1,178 @@
+---
+import Base from "../layouts/Base.astro";
+import QuestCard from "../components/QuestCard.astro";
+import LogList from "../components/LogList.astro";
+import { allQuests, publicLogs } from "../lib/content";
+const quests = await allQuests();
+const logs = await publicLogs();
+---
+
+<Base
+  title="Garage Sidequests"
+  description="Real technical projects from a working garage: homelabs, hardware reuse, electronics, automation, and notes on what happens along the way."
+>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">
+        <span aria-hidden="true">↳</span> GARAGE SIDEQUESTS
+      </p>
+      <h1>
+        Technology is more fun <em>off the main quest.</em>
+      </h1>
+      <p class="hero-description">
+        Homelabs, hardware, electronics, automation, and whatever technical
+        rabbit hole looks interesting next.
+      </p>
+      <div class="actions">
+        <a class="button" href="/quests/">
+          Explore the Quests <span aria-hidden="true">↗</span>
+        </a>
+        <a class="text-button" href="/quest-log/">
+          Read the Quest Log <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+    <div class="bench" aria-hidden="true">
+      <div class="bench-label">
+        BENCH NOTES <span>01 / ONGOING</span>
+      </div>
+      <svg viewBox="0 0 440 330" fill="none">
+        <defs>
+          <pattern
+            id="grid"
+            width="22"
+            height="22"
+            patternUnits="userSpaceOnUse"
+          >
+            <path d="M22 0H0V22" stroke="#343b3b" stroke-width=".7" />
+          </pattern>
+        </defs>
+        <rect width="440" height="330" fill="url(#grid)" />
+        <path
+          d="M72 115C-10 130 10 267 105 261S171 279 190 289M319 162c99-68 122 88 62 93s-70-8-86 43"
+          stroke="#bf8850"
+          stroke-width="4"
+        />
+        <g transform="rotate(-9 170 135)">
+          <rect
+            x="72"
+            y="64"
+            width="196"
+            height="139"
+            rx="8"
+            fill="#232929"
+            stroke="#919c96"
+            stroke-width="2"
+          />
+          <rect
+            x="87"
+            y="80"
+            width="165"
+            height="95"
+            fill="#1c2422"
+            stroke="#526d61"
+          />
+          <path
+            d="M108 99h41v26h45v31h39M110 149h27v-39h88"
+            stroke="#6ea48e"
+            stroke-width="2"
+          />
+          <circle cx="108" cy="99" r="5" fill="#f5b45b" />
+          <circle cx="233" cy="156" r="5" fill="#f5b45b" />
+          <rect
+            x="157"
+            y="107"
+            width="27"
+            height="29"
+            fill="#4e5a52"
+            stroke="#a7b7a8"
+          />
+          <path d="M92 188h81m28 0h40" stroke="#8d9792" stroke-width="3" />
+        </g>
+        <g transform="rotate(7 330 110)">
+          <rect
+            x="293"
+            y="55"
+            width="77"
+            height="120"
+            rx="8"
+            fill="#3b3b31"
+            stroke="#b5a47d"
+            stroke-width="2"
+          />
+          <rect x="303" y="69" width="57" height="32" rx="2" fill="#b8c3a2" />
+          <path d="M314 84h34" stroke="#3e4b40" stroke-width="3" />
+          <circle cx="331" cy="131" r="16" stroke="#b5a47d" stroke-width="2" />
+          <path d="m331 131 8-12" stroke="#f5b45b" stroke-width="3" />
+        </g>
+        <g transform="rotate(-5 232 251)">
+          <rect x="158" y="218" width="147" height="80" fill="#c7bfa4" />
+          <path
+            d="M172 240h113M172 252h81M172 264h100M172 277h55"
+            stroke="#686451"
+            stroke-width="2"
+          />
+          <path d="m273 278 6 5 11-14" stroke="#49735d" stroke-width="2" />
+        </g>
+        <path d="m42 301 67-46" stroke="#aab0ab" stroke-width="7" />
+        <path d="m32 308 22-16" stroke="#f5b45b" stroke-width="13" />
+        <circle cx="397" cy="38" r="6" stroke="#f5b45b" stroke-width="2" />
+      </svg>
+      <div class="bench-bottom">HARDWARE / EXPERIMENTS / FIELD NOTES</div>
+    </div>
+  </section>
+  <div class="process-strip">
+    <span>
+      01 <b>Find something interesting.</b>
+    </span>
+    <span>
+      02 <b>Figure out how it works.</b>
+    </span>
+    <span>
+      03 <b>Make it useful.</b>
+    </span>
+    <span>
+      04 <b>Document what happened.</b>
+    </span>
+  </div>
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">ON THE BENCH</p>
+        <h2>Active Quests</h2>
+      </div>
+      <a href="/quests/">
+        All quests <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <div class="quest-grid">
+      {quests
+        .filter((q) => q.data.status === "active")
+        .map((quest, index) => (
+          <QuestCard quest={quest} index={index} />
+        ))}
+    </div>
+    <div class="planned-note">
+      <span class="mono">UP NEXT</span>
+      {quests
+        .filter((q) => q.data.status === "planned")
+        .map((q) => (
+          <a href={`/quests/${q.data.slug}/`}>
+            {q.data.title} <span aria-hidden="true">↗</span>
+          </a>
+        ))}
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">NOTES FROM THE GARAGE</p>
+        <h2>Latest Quest Log</h2>
+      </div>
+      <a href="/quest-log/">
+        Full log <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <LogList entries={logs.slice(0, 3)} />
+  </section>
+</Base>

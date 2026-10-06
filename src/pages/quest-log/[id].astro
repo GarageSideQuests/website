@@ -1,0 +1,69 @@
+---
+import { render, getEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Photo from "../../components/Photo.astro";
+import AffiliateDisclosure from "../../components/AffiliateDisclosure.astro";
+import { publicLogs, dateLabel } from "../../lib/content";
+export async function getStaticPaths() {
+  return (await publicLogs()).map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const quest = await getEntry(entry.data.quest);
+const links = [
+  ...entry.data.externalLinks,
+  ...(entry.data.githubUrl
+    ? [{ label: "GitHub", url: entry.data.githubUrl, affiliate: false }]
+    : []),
+  ...(entry.data.videoUrl
+    ? [{ label: "Video", url: entry.data.videoUrl, affiliate: false }]
+    : []),
+];
+---
+
+<Base
+  title={entry.data.title}
+  description={entry.data.summary}
+  article={{ date: entry.data.date }}
+>
+  <article class="reading">
+    <div class="page-intro">
+      <a href="/quest-log/">← Quest Log</a>
+      <p class="eyebrow">
+        <time datetime={entry.data.date.toISOString()}>
+          {dateLabel(entry.data.date)}
+        </time>
+      </p>
+      <h1>{entry.data.title}</h1>
+      <p>{entry.data.summary}</p>
+      {quest && (
+        <a href={`/quests/${quest.data.slug}/`}>{quest.data.title} ↗</a>
+      )}
+    </div>
+    <div class="prose">
+      <Content />
+      {entry.data.images.map((img) => (
+        <Photo {...img} />
+      ))}
+      {links.length > 0 && (
+        <section>
+          <h2>References</h2>
+          <ul>
+            {links.map((l) => (
+              <li>
+                <a href={l.url} rel={l.affiliate ? "sponsored" : undefined}>
+                  {l.label}
+                  {l.affiliate ? " (affiliate)" : ""}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {links.some((l) => l.affiliate) && <AffiliateDisclosure />}
+    </div>
+  </article>
+</Base>

@@ -1,0 +1,118 @@
+---
+import { render, getEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import StatusBadge from "../../components/StatusBadge.astro";
+import Tag from "../../components/Tag.astro";
+import LogList from "../../components/LogList.astro";
+import Photo from "../../components/Photo.astro";
+import AffiliateDisclosure from "../../components/AffiliateDisclosure.astro";
+import { allQuests, publicLogs, dateLabel } from "../../lib/content";
+export async function getStaticPaths() {
+  return (await allQuests()).map((quest) => ({
+    params: { slug: quest.data.slug },
+    props: { quest },
+  }));
+}
+const { quest } = Astro.props;
+const { Content } = await render(quest);
+const logs = (await publicLogs()).filter((e) => e.data.quest.id === quest.id);
+const gear = await Promise.all(quest.data.gear.map((ref) => getEntry(ref)));
+const resources = [
+  ...quest.data.externalLinks,
+  ...quest.data.downloads,
+  ...quest.data.products,
+  ...(quest.data.githubUrl
+    ? [{ label: "GitHub", url: quest.data.githubUrl, affiliate: false }]
+    : []),
+  ...(quest.data.videoUrl
+    ? [{ label: "Video", url: quest.data.videoUrl, affiliate: false }]
+    : []),
+];
+---
+
+<Base
+  title={quest.data.title}
+  description={quest.data.description ?? quest.data.summary}
+>
+  <section class="page-intro">
+    <a class="back-link" href="/quests/">
+      ← All quests
+    </a>
+    <div class="quest-meta">
+      <p class="eyebrow">PROJECT HUB</p>
+      <StatusBadge status={quest.data.status} />
+    </div>
+    <h1>{quest.data.title}</h1>
+    <p>{quest.data.summary}</p>
+    <div class="tags">
+      {quest.data.tags.map((label) => (
+        <Tag label={label} />
+      ))}
+    </div>
+    {quest.data.updatedDate && (
+      <p class="mono">Updated {dateLabel(quest.data.updatedDate)}</p>
+    )}
+  </section>
+  <div class="project-layout">
+    <div class="prose">
+      {quest.data.heroImage && <Photo {...quest.data.heroImage} />}
+      <Content />
+      {gear.length > 0 && (
+        <section id="gear">
+          <h2>Gear Used</h2>
+          {gear.map(
+            (item) =>
+              item && (
+                <div>
+                  <h3>{item.data.title}</h3>
+                  <p>{item.data.summary}</p>
+                  {item.data.links.map((l) => (
+                    <p>
+                      <a
+                        href={l.url}
+                        rel={l.affiliate ? "sponsored" : undefined}
+                      >
+                        {l.label}
+                        {l.affiliate ? " (affiliate)" : ""}
+                      </a>
+                    </p>
+                  ))}
+                </div>
+              ),
+          )}
+        </section>
+      )}
+      {resources.length > 0 && (
+        <section id="resources">
+          <h2>Files / Resources</h2>
+          <ul>
+            {resources.map((link) => (
+              <li>
+                <a
+                  href={link.url}
+                  rel={link.affiliate ? "sponsored" : undefined}
+                >
+                  {link.label}
+                  {link.affiliate ? " (affiliate)" : ""}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {(resources.some((l) => l.affiliate) ||
+        gear.some((g) => g?.data.links.some((l) => l.affiliate))) && (
+        <AffiliateDisclosure />
+      )}
+    </div>
+    <aside class="project-note">
+      <p class="eyebrow">A WORK IN PROGRESS</p>
+      <p>A project hub, with room for the useful bits and the wrong turns.</p>
+      <a href="#quest-log">Jump to the Quest Log ↓</a>
+    </aside>
+  </div>
+  <section id="quest-log" class="section">
+    <h2>Quest Log</h2>
+    <LogList entries={logs} />
+  </section>
+</Base>

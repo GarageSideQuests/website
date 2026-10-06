@@ -1,0 +1,60 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Privacy"
+  description="How this static website handles data, hosting, and contact."
+>
+  <article class="reading">
+    <div class="page-intro">
+      <p class="eyebrow">SITE NOTES</p>
+      <h1>Privacy</h1>
+    </div>
+    <div class="prose">
+      <p>
+        Garage Sidequests is a static website. It has no user accounts,
+        comments, contact forms, advertising scripts, or analytics configured in
+        V1.
+      </p>
+      <h2>On your device</h2>
+      <p>
+        The site does not set cookies or use browser storage. Fonts and visual
+        assets are served with the site, without third-party font services.
+        External links do not load their destinations until you follow them.
+      </p>
+      <h2>Hosting</h2>
+      <p>
+        The production deployment is intended for Cloudflare. Hosting providers
+        process connection information, such as IP addresses and request
+        details, to deliver and protect websites. Their infrastructure may
+        retain operational or security logs according to their own policies and
+        account settings. This site does not collect that information through a
+        separate analytics service.
+      </p>
+      <h2>Email and external links</h2>
+      <p>
+        If you email the public contact address, your email provider and the
+        receiving email service process your message. Your message and address
+        are used to respond to your inquiry. Please don’t send sensitive
+        information.
+      </p>
+      <p>
+        Linked sites have their own privacy practices.{" "}
+        <a href="https://www.cloudflare.com/privacypolicy/">
+          Cloudflare’s privacy policy
+        </a>{" "}
+        describes its practices.
+      </p>
+      <h2>Changes and questions</h2>
+      <p>
+        This page will be updated if analytics or other data collection is
+        introduced. Questions can be sent to{" "}
+        <a href="mailto:hello@garagesidequests.com">
+          hello@garagesidequests.com
+        </a>
+        .
+      </p>
+    </div>
+  </article>
+</Base>

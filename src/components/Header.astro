@@ -1,0 +1,29 @@
+---
+const links = [
+  ["Quests", "/quests/"],
+  ["Quest Log", "/quest-log/"],
+  ["Gear", "/gear/"],
+  ["About", "/about/"],
+];
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="Garage Sidequests home">
+      <img src="/favicon.svg" width="36" height="36" alt="" />
+      <span>
+        Garage<span class="brand-second">Sidequests</span>
+      </span>
+    </a>
+    <nav aria-label="Primary">
+      {links.map(([label, url]) => (
+        <a
+          href={url}
+          aria-current={Astro.url.pathname.startsWith(url) ? "page" : undefined}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>

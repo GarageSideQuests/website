@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { dateLabel } from "../lib/content";
+interface Props {
+  entries: CollectionEntry<"log">[];
+}
+const { entries } = Astro.props;
+---
+
+{entries.length ? (
+  <div class="log-list">
+    {entries.map((entry) => (
+      <article>
+        <time datetime={entry.data.date.toISOString()}>
+          {dateLabel(entry.data.date)}
+        </time>
+        <h3>
+          <a href={`/quest-log/${entry.id}/`}>{entry.data.title}</a>
+        </h3>
+        <p>{entry.data.summary}</p>
+      </article>
+    ))}
+  </div>
+) : (
+  <div class="empty-state">
+    <span class="mono">LOG / 000</span>
+    <div>
+      <h3>The work comes first. The notes follow.</h3>
+      <p>
+        No Quest Log entries yet. Project updates, measurements, wrong turns,
+        and useful discoveries will land here as they’re documented.
+      </p>
+    </div>
+  </div>
+)}

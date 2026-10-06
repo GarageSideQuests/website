@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from "astro:content";
+import StatusBadge from "./StatusBadge.astro";
+import Tag from "./Tag.astro";
+interface Props {
+  quest: CollectionEntry<"quests">;
+  index?: number;
+}
+const { quest, index = 0 } = Astro.props;
+---
+
+<article class="quest-card">
+  <div class="card-top">
+    <span class="mono">Q / {String(index + 1).padStart(2, "0")}</span>
+    <StatusBadge status={quest.data.status} />
+  </div>
+  <div class="card-diagram" aria-hidden="true">
+    <span>┌───┐</span>
+    <span class="trace">──●──</span>
+    <span>└─┬─┘</span>
+  </div>
+  <h3>
+    <a href={`/quests/${quest.data.slug}/`}>{quest.data.title}</a>
+  </h3>
+  <p>{quest.data.summary}</p>
+  <div class="tags">
+    {quest.data.tags.map((label) => (
+      <Tag label={label} />
+    ))}
+  </div>
+  <span class="card-arrow" aria-hidden="true">
+    ↗
+  </span>
+</article>

@@ -1,0 +1,10 @@
+---
+interface Props {
+  status: "planned" | "active" | "paused" | "complete" | "abandoned";
+}
+const { status } = Astro.props;
+---
+
+<span class:list={["status", status]}>
+  <span aria-hidden="true">●</span> {status}
+</span>
